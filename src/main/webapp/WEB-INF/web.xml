@@ -4,6 +4,21 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
 
-
+    <servlet>
+        <servlet-name>orderServlet</servlet-name>
+        <servlet-class>servlet.OrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>orderServlet</servlet-name>
+        <url-pattern>/test/*</url-pattern>
+    </servlet-mapping>
+    <filter>
+        <filter-name>logFilter</filter-name>
+        <filter-class>common.LogFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>logFilter</filter-name>
+        <url-pattern>/test/*</url-pattern>
+    </filter-mapping>
 
 </web-app>
