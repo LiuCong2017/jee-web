@@ -2,7 +2,7 @@
 - tomcat9
 - jdk17
 - servlet + jdbc + mysql
-- jquery + bootstrap + easyui
+- JSP + jquery + bootstrap + easyui
 
 #### 功能：
 - 登录/登出
@@ -11,3 +11,4 @@
 - 文件上传/下载
 - 聚合搜索
 - jdbc多数据源
+- 用户角色权限菜单控制

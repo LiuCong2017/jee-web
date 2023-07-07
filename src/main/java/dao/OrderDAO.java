@@ -7,8 +7,7 @@ import domain.vo.OrderVO;
 import util.DBUtil;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +56,86 @@ public class OrderDAO {
         }
 
         return new CommonVO<>(paramsDTO.getPageNumber(), paramsDTO.getPageSize(), totalCount,orderVOList);
-    };
+    }
+
+    public boolean add(Order order){
+        String sql = "insert into tbl_order values(null,?,?,?,?)";
+        DBUtil dbUtil = new DBUtil();
+        PreparedStatement ps = null;
+        try{
+            ps = dbUtil.getConn().prepareStatement(sql);
+            ps.setString(1,order.getCustomerNumber());
+            ps.setInt(2,order.getAge());
+            ps.setBigDecimal(3,order.getAmount());
+            ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+
+            return ps.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbUtil.close(dbUtil.getConn(),null);
+        }
+    }
+
+    public Order getById(int id){
+        Order order = null;
+        DBUtil dbUtil = new DBUtil();
+        String sql = "select * from tbl_order where id="+id;
+        ResultSet rs = null;
+        try{
+            rs = dbUtil.executeQuery(sql);
+            if(rs.next()) {
+                int beanId = rs.getInt("id");
+                String custNo = rs.getString("customer_number");
+                int age = rs.getInt("age");
+                BigDecimal amount = rs.getBigDecimal("amount");
+                LocalDateTime orderTime = rs.getTimestamp("order_time").toLocalDateTime();
+                order = new Order(beanId,custNo,age,amount,orderTime);
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dbUtil.close(dbUtil.getConn(),rs);
+        }
+        return order;
+    }
+
+    public int update(Order order){
+        int result = 0;
+        String sql = "update tbl_order set customer_number=?,age=?,amount=?,order_time=? where id=?";
+        DBUtil dbUtil = new DBUtil();
+        PreparedStatement ps = null;
+//        ResultSet rs = null;
+        try{
+            ps = dbUtil.getConn().prepareStatement(sql);
+            ps.setString(1,order.getCustomerNumber());
+            ps.setInt(2,order.getAge());
+            ps.setBigDecimal(3,order.getAmount());
+
+            result = ps.executeUpdate();
+//            rs = ps.getGeneratedKeys();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dbUtil.close(dbUtil.getConn(), null);
+        }
+        return result;
+    }
+
+    public boolean deleteById(int id){
+        boolean result = false;
+        String sql = "delete from tbl_order where id="+id;
+        DBUtil dbUtil = new DBUtil();
+        Statement s = null;
+        try{
+            s = dbUtil.getConn().createStatement();
+            result = s.execute(sql);
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dbUtil.close(dbUtil.getConn(),null);
+        }
+        return result;
+    }
 
 }

@@ -11,6 +11,18 @@ public class Order {
     private BigDecimal amount;
     private LocalDateTime orderTime;
 
+    public Order(){
+        super();
+    }
+
+    public Order(Integer id, String customerNumber, Integer age, BigDecimal amount, LocalDateTime orderTime) {
+        this.id = id;
+        this.customerNumber = customerNumber;
+        this.age = age;
+        this.amount = amount;
+        this.orderTime = orderTime;
+    }
+
     public LocalDateTime getOrderTime() {
         return orderTime;
     }
